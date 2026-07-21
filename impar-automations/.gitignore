@@ -16,8 +16,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -42,10 +42,15 @@ Thumbs.db
 # Sensitive Data
 .env
 .env.production
+.env.encrypted
+.fernet.key
+.cookies.json
+.cookies.backup.json
 credentials.json
 tokens.json
 *.key
 *.pem
+credentials.dat
 
 # Application Data
 queue/
