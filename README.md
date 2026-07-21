@@ -32,16 +32,24 @@ Tempo: 2-3 minutos | Resultado: Tudo pronto! ✨
 
 ```
 mecanicoskillwindows/
-├── install-windows-auto.bat    ⭐ Clique aqui para instalar
-├── install-windows-auto.ps1    (script PowerShell automático)
-├── SETUP-CHECKLIST.md          (checklist pós-instalação)
-├── README.md                   (este arquivo)
-└── impar-automations/          (ZIP extraído)
-    ├── scripts/                (23 Python scripts)
-    ├── data/                   (CSVs + configuração)
-    ├── docs/                   (documentação)
-    ├── requirements.txt
-    └── .env.template
+├── install-windows-auto.bat         ⭐ Clique aqui para instalar
+├── install-windows-auto.ps1         (script PowerShell automático)
+├── SETUP-CHECKLIST.md               (checklist pós-instalação)
+├── README.md                        (este arquivo)
+│
+├── impar-automations/               (ZIP extraído - automações principais)
+│   ├── scripts/                     (23 Python scripts)
+│   ├── data/                        (CSVs + configuração)
+│   ├── docs/                        (documentação)
+│   ├── requirements.txt
+│   └── .env.template
+│
+└── scheduled-tasks/                 ⭐ NOVO - Automações agendadas
+    ├── README.md                    (guia de automações agendadas)
+    └── impar-messenger-inbox/       (respoador de Messenger)
+        ├── SKILL.md                 (especificação da tarefa)
+        ├── install-windows.md       (guia de instalação)
+        └── run.ps1                  (script de execução)
 ```
 
 ---
@@ -107,6 +115,27 @@ Após definir, execute o instalador. O `.env` será preenchido automaticamente.
 
 ### Opção 2: Preencher Manualmente
 Se não tiver variáveis de ambiente, o script cria um `.env` vazio. Abra e preencha os campos necessários.
+
+---
+
+## 🔔 Automações Agendadas (NOVO!)
+
+Além das automações manuais do Impar, há automações que rodam **continuamente via Task Scheduler**:
+
+### 📨 Impar Messenger Inbox (A cada 5 minutos)
+- Responde conversas não lidas do Facebook Marketplace
+- Captura telefones de leads automaticamente
+- Registra logs de execução
+
+**Como instalar:**
+```powershell
+cd scheduled-tasks\impar-messenger-inbox
+# Siga as instruções em install-windows.md
+```
+
+**Resultado:** Seu Messenger será respondido automaticamente!
+
+Veja: `scheduled-tasks/README.md` para mais detalhes.
 
 ---
 
