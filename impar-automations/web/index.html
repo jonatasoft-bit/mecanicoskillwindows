@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impar Automations - Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>🏠 Impar Automations</h1>
+                <p class="subtitle">Automação de Publicações no Facebook Marketplace</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Status Card -->
+            <section class="card status-card">
+                <div class="card-header">
+                    <h2>📊 Status do Sistema</h2>
+                </div>
+                <div class="card-body">
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <div class="status-label">Autenticação</div>
+                            <div class="status-value" id="auth-status">
+                                <span class="badge loading">Verificando...</span>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Cookies</div>
+                            <div class="status-value" id="cookies-status">
+                                <span class="badge loading">Verificando...</span>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Dias até Expiração</div>
+                            <div class="status-value" id="expiry-status">
+                                <span class="badge neutral">-</span>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Automação</div>
+                            <div class="status-value" id="automation-status">
+                                <span class="badge loading">Verificando...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-message" id="status-message">
+                        Verificando status do sistema...
+                    </div>
+                </div>
+            </section>
+
+            <!-- Actions Card -->
+            <section class="card actions-card">
+                <div class="card-header">
+                    <h2>⚙️ Ações</h2>
+                </div>
+                <div class="card-body">
+                    <div class="actions-grid">
+                        <button class="btn btn-primary" onclick="startLogin()">
+                            🔐 Fazer Login Manual
+                        </button>
+                        <button class="btn btn-secondary" onclick="refreshCookies()" id="refresh-btn" disabled>
+                            🔄 Renovar Cookies
+                        </button>
+                        <button class="btn btn-tertiary" onclick="setupScheduler()">
+                            ⏱️ Ativar Automação
+                        </button>
+                        <button class="btn btn-ghost" onclick="reloadStatus()">
+                            🔍 Verificar Status
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Info Card -->
+            <section class="card info-card">
+                <div class="card-header">
+                    <h2>ℹ️ Informações</h2>
+                </div>
+                <div class="card-body">
+                    <div class="info-section">
+                        <h3>Como Funciona:</h3>
+                        <ol>
+                            <li><strong>Fazer Login:</strong> Clique no botão para abrir navegador</li>
+                            <li><strong>Salvar Credenciais:</strong> Sistema guarda email/senha de forma segura</li>
+                            <li><strong>Automação:</strong> Login renovado automaticamente a cada 3 dias</li>
+                            <li><strong>Publicação:</strong> Publica nos grupos 24/7 sem intervenção</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>🔒 Segurança:</h3>
+                        <ul>
+                            <li>✅ Credenciais encriptadas (Fernet)</li>
+                            <li>✅ Cookies validados com timestamp</li>
+                            <li>✅ Dashboard apenas localhost (sem exposição na internet)</li>
+                            <li>✅ Notificações WhatsApp se algo falhar</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>📅 Cronograma:</h3>
+                        <ul>
+                            <li>🔄 Renovação de Cookies: A cada 3 dias (3:00 AM)</li>
+                            <li>📢 Publicação Marketplace: A cada 10 minutos (9:00-22:00)</li>
+                            <li>📍 Publicação Grupos: 11:30, 17:00, 21:30 diariamente</li>
+                            <li>⏸️ Limite: Máx 30 grupos/dia (regra do Facebook)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Card -->
+            <section class="card history-card">
+                <div class="card-header">
+                    <h2>📜 Histórico</h2>
+                </div>
+                <div class="card-body">
+                    <div id="history-list" class="history-list">
+                        <p class="text-center text-muted">Carregando histórico...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Impar Automations v1.0 | Dashboard © 2024</p>
+        </footer>
+    </div>
+
+    <!-- Modal para Login -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔐 Login no Facebook</h2>
+                <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="login-iframe" src="/login.html" style="width: 100%; height: 600px; border: none; border-radius: 8px;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

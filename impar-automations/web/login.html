@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Facebook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 40px;
+            font-size: 0.95em;
+        }
+
+        .info {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            text-align: left;
+            color: #1e40af;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .steps {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .steps h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .steps ol {
+            margin-left: 20px;
+            color: #6b7280;
+            line-height: 2;
+        }
+
+        .steps li {
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-open-facebook {
+            background: #1877f2;
+            color: white;
+        }
+
+        .btn-open-facebook:hover {
+            background: #166fe5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-close {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .btn-close:hover {
+            background: #d1d5db;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .loading.active {
+            display: block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status-message.success {
+            display: block;
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .status-message.error {
+            display: block;
+            background: #fee2e2;
+            color: #7f1d1d;
+            border-left: 4px solid #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>🔐 Login Facebook</h1>
+        <p class="subtitle">Acesse sua conta do Facebook</p>
+
+        <div class="info">
+            ℹ️ <strong>Informação:</strong> Uma nova janela do navegador será aberta com o Facebook. Faça login normalmente e o sistema capturará seus cookies automaticamente.
+        </div>
+
+        <div class="status-message" id="status-message"></div>
+
+        <div class="steps">
+            <h3>Como proceder:</h3>
+            <ol>
+                <li>Clique em "Abrir Facebook" abaixo</li>
+                <li>Uma nova janela abrirá com Facebook Marketplace</li>
+                <li>Digite seu email e senha</li>
+                <li>Confirme 2FA se solicitado</li>
+                <li>Quando login completar, volte aqui</li>
+                <li>Clique "Fechar" para confirmar captura</li>
+            </ol>
+        </div>
+
+        <div class="loading" id="loading">
+            ⏳ Verificando login...
+        </div>
+
+        <div class="button-group">
+            <button class="btn-open-facebook" onclick="openFacebookLogin()">
+                🌐 Abrir Facebook
+            </button>
+            <button class="btn-close" onclick="closeLoginTab()">
+                ✓ Fechar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let facebookWindow = null;
+
+        /**
+         * Abre Facebook em nova janela
+         */
+        function openFacebookLogin() {
+            const url = 'https://www.facebook.com/marketplace/';
+            facebookWindow = window.open(url, 'facebook-login', 'width=800,height=600');
+
+            if (!facebookWindow) {
+                showStatus('Erro: Pop-up bloqueado. Permita pop-ups neste site.', 'error');
+                return;
+            }
+
+            showStatus('Facebook aberta em nova janela. Faça login e volte aqui.', 'success');
+
+            // Verificar se Facebook foi fechada
+            const checkInterval = setInterval(() => {
+                if (facebookWindow && facebookWindow.closed) {
+                    clearInterval(checkInterval);
+                    checkLoginStatus();
+                }
+            }, 1000);
+        }
+
+        /**
+         * Verifica status do login
+         */
+        function checkLoginStatus() {
+            const loading = document.getElementById('loading');
+            loading.classList.add('active');
+
+            setTimeout(() => {
+                loading.classList.remove('active');
+                showStatus('✓ Login captado! Feche esta janela no dashboard.', 'success');
+            }, 2000);
+        }
+
+        /**
+         * Fecha aba de login
+         */
+        function closeLoginTab() {
+            if (facebookWindow && !facebookWindow.closed) {
+                facebookWindow.close();
+            }
+
+            // Notificar parent que login foi concluído
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'login-complete' }, '*');
+            }
+
+            // Fechar modal
+            setTimeout(() => {
+                document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
+            }, 500);
+        }
+
+        /**
+         * Mostra mensagem de status
+         */
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status-message');
+            statusEl.textContent = message;
+            statusEl.className = 'status-message ' + type;
+        }
+
+        // Receber mensagens do parent
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'close-login') {
+                closeLoginTab();
+            }
+        });
+    </script>
+</body>
+</html>
